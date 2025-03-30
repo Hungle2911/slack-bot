@@ -1,4 +1,6 @@
 class Api::SlackController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def slash_command
     case params[:command]
     when "/rootly"
@@ -21,6 +23,10 @@ class Api::SlackController < ApplicationController
     end
   end
 
-  def handle_declare_command
+  def handle_declare_command(title)
+    slack_service = ::SlackService.new
+    slack_service.open_incident_modal(params[:trigger_id], title)
+
+    head :ok
   end
 end

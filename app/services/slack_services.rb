@@ -1,2 +1,0 @@
-class SlackService
-end
