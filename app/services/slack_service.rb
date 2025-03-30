@@ -144,4 +144,31 @@ class SlackService
 
     channel_id
   end
+
+  def resolve_incident(incident, channel_id)
+    incident.resolve!
+
+    client.chat_postMessage(
+      channel: channel_id,
+      text: ":white_check_mark: *INCIDENT RESOLVED* :white_check_mark:",
+      blocks: [
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: "✅ INCIDENT RESOLVED ✅"
+          }
+        },
+        {
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: "*Time to resolution:*\n#{incident.resolution_time}"
+            }
+          ]
+        }
+      ]
+    )
+  end
 end
