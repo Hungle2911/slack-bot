@@ -39,9 +39,6 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-# View components
-gem "view_component"
-
 # For Slack integration
 gem "slack-ruby-client"
 

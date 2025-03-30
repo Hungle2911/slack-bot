@@ -5,4 +5,8 @@ class Incident < ApplicationRecord
   validates :title, presence: true
   validates :status, inclusion: { in: STATUSES }
   validates :severity, inclusion: { in: SEVERITY_LEVELS }, allow_nil: true
+
+  def active?
+    status == "active"
+  end
 end
