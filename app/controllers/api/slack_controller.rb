@@ -26,6 +26,8 @@ class Api::SlackController < ApplicationController
     case subcommand
     when "declare"
       handle_declare_command(args.join(" "))
+    when "resolve"
+      handle_resolve_command
     else
       render json: {
         text: "Unknown subcommand: #{subcommand}. Available commands: `/rootly declare <title>` or `/rootly resolve`"
@@ -38,6 +40,31 @@ class Api::SlackController < ApplicationController
     slack_service.open_incident_modal(params[:trigger_id], title)
 
     head :ok
+  end
+
+  def handle_resolve_command
+    channel_id = params[:channel_id]
+    incident = Incident.find_by(slack_channel_id: channel_id)
+
+    if incident.nil?
+      render json: {
+        text: "This command can only be used in an incident channel."
+      }
+      return
+    end
+
+    if incident.active?
+      slack_service = ::SlackService.new
+      slack_service.resolve_incident(incident, channel_id)
+
+      render json: {
+        text: "Incident has been resolved. Time to resolution: #{incident.resolution_time}"
+      }
+    else
+      render json: {
+        text: "This incident has already been resolved."
+      }
+    end
   end
 
   def handle_modal_submission(payload)
