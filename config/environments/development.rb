@@ -1,7 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  config.hosts << "577f-2607-fea8-4c0-9d0-546f-8167-c661-6c5b.ngrok-free.app"
+  config.hosts << "b9de-99-231-15-60.ngrok-free.app"
   # Settings specified here will take precedence over those in config/application.rb.
 
 
