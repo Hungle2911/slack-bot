@@ -49,7 +49,7 @@ class Api::SlackController < ApplicationController
     user_id = payload["user"]["id"]
     creator_name = payload["user"]["username"]
 
-    Incident.create!(
+    incident = Incident.create!(
       title: title,
       description: description,
       severity: severity,
@@ -57,7 +57,7 @@ class Api::SlackController < ApplicationController
       creator_name: creator_name,
       status: "active"
     )
-
+    ::SlackService.new.create_new_channel(incident)
     render json: {}
   end
 end

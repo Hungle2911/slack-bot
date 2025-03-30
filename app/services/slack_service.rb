@@ -102,4 +102,46 @@ class SlackService
       }
     )
   end
+
+  def create_new_channel(incident)
+    sanitized_title = incident.title.downcase.gsub(/[^a-z0-9]/, "-")[0..20]
+    channel_name = "inc-#{sanitized_title}-#{Time.now.to_i.to_s[-5..-1]}"
+
+    response = client.conversations_create(name: channel_name)
+    channel_id = response["channel"]["id"]
+    incident.update(slack_channel_id: channel_id)
+    client.conversations_invite(channel: channel_id, users:  incident.creator_id)
+    client.chat_postMessage(
+      channel: channel_id,
+      text: ":rotating_light: *INCIDENT DECLARED* :rotating_light:",
+      blocks: [
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: "🚨 INCIDENT DECLARED 🚨"
+          }
+        },
+        {
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: "*Title:*\n#{incident.title}"
+            },
+            {
+              type: "mrkdwn",
+              text: "*Severity:*\n#{incident.severity || 'Not specified'}"
+            },
+            {
+              type: "mrkdwn",
+              text: "*Created by:*\n#{incident.creator_name}"
+            }
+          ]
+        }
+      ]
+    )
+
+    channel_id
+  end
 end

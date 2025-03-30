@@ -8,7 +8,6 @@ class CreateIncidents < ActiveRecord::Migration[8.0]
       t.string :creator_name
       t.string :creator_id
       t.string :slack_channel_id
-      t.datetime :started_at
       t.datetime :resolved_at
 
       t.timestamps
