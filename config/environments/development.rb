@@ -2,7 +2,7 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+  config.hosts << "541e-2607-fea8-1340-11d0-c912-567e-e086-9180.ngrok-free.app"
 
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true

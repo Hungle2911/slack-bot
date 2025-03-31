@@ -3,6 +3,10 @@ class IncidentsController < ApplicationController
     @incidents = Incident.all.order(sort_column + " " + sort_direction)
   end
 
+  def show
+    @incident = Incident.find(params[:id])
+  end
+
   private
 
   def sort_column
