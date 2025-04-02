@@ -1,7 +1,8 @@
 class SlackService
   attr_reader :client
-  def initialize
-    @client = Slack::Web::Client.new(token: ENV["SLACK_API_TOKEN"])
+  def initialize(team_id)
+    team = Team.find_by(team_id: team_id)
+    @client = Slack::Web::Client.new(token: team&.access_token || ENV["SLACK_BOT_TOKEN"])
   end
 
   def open_incident_modal(trigger_id, title = nil)

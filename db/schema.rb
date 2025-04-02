@@ -10,20 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_29_203923) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_02_194122) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "incidents", force: :cascade do |t|
-    t.string "title"
+    t.string "title", null: false
     t.text "description"
     t.string "severity"
-    t.string "status"
+    t.string "status", default: "active"
     t.string "creator_name"
     t.string "creator_id"
     t.string "slack_channel_id"
-    t.datetime "started_at"
     t.datetime "resolved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "team_id"
+    t.index ["status"], name: "index_incidents_on_status"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "team_id"
+    t.string "team_name"
+    t.string "access_token"
+    t.string "bot_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -3,6 +3,7 @@ class Incident < ApplicationRecord
   STATUSES = [ "active", "resolved" ].freeze
 
   validates :title, presence: true
+  validates :team_id, presence: true
   validates :status, inclusion: { in: STATUSES }
   validates :severity, inclusion: { in: SEVERITY_LEVELS }, allow_nil: true
 
