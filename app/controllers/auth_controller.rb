@@ -6,9 +6,6 @@ class AuthController < ApplicationController
     end
 
     client = Slack::Web::Client.new
-    Rails.logger.debug "OAuth flow - Client ID: #{ENV["SLACK_CLIENT_ID"]}"
-    Rails.logger.debug "OAuth flow - Client ID: #{ENV["SLACK_API_TOKEN"]}"
-    Rails.logger.debug "OAuth flow - Redirect URI: #{auth_slack_callback_url}"
 
     begin
       response = client.oauth_v2_access(
