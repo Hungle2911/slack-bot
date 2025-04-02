@@ -1,23 +1,22 @@
 <div class="container mx-auto px-4 py-8">
-  <div class="mb-4">
+  <div class="mb-6">
     <%= link_to "← Back to Incidents", incidents_path, class: "text-blue-600 hover:text-blue-800" %>
   </div>
 
   <div class="bg-white shadow overflow-hidden sm:rounded-lg">
     <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
-          Incident Details
-        </h3>
-        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+        <p class="mt-1 max-w-2xl text-m text-gray-500">
           ID: #<%= @incident.id %>
         </p>
-      </div>
-
-      <% status_class = @incident.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>
-      <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full <%= status_class %>">
+        <% status_class = @incident.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>
+        <p class="mt-1 max-w-2xl text-sm font-medium text-gray-500">
+          Status:
+          <span class="px-5 py-1 text-sm font-semibold rounded-full <%= status_class %>">
         <%= @incident.status.upcase %>
       </span>
+        </p>
+      </div>
     </div>
 
     <div class="border-t border-gray-200">
