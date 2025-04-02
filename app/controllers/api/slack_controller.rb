@@ -36,14 +36,14 @@ class Api::SlackController < ApplicationController
     end
   end
 
-  def handle_declare_command(title)
+  def handle_declare_command(title, team_id)
     slack_service = ::SlackService.new(team_id)
     slack_service.open_incident_modal(params[:trigger_id], title)
 
     head :ok
   end
 
-  def handle_resolve_command
+  def handle_resolve_command(team_id)
     channel_id = params[:channel_id]
     incident = Incident.find_by(slack_channel_id: channel_id)
 
@@ -76,6 +76,7 @@ class Api::SlackController < ApplicationController
 
     user_id = payload["user"]["id"]
     creator_name = payload["user"]["username"]
+    team_id = payload["team"]["id"]
 
     incident = Incident.create!(
       title: title,
