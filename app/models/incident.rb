@@ -2,7 +2,10 @@ class Incident < ApplicationRecord
   SEVERITY_LEVELS = [ "sev0", "sev1", "sev2" ].freeze
   STATUSES = [ "active", "resolved" ].freeze
 
+  belongs_to :team, foreign_key: "team_id", primary_key: "team_id"
+
   validates :title, presence: true
+  validates :team_id, presence: true
   validates :status, inclusion: { in: STATUSES }
   validates :severity, inclusion: { in: SEVERITY_LEVELS }, allow_nil: true
 

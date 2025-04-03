@@ -22,12 +22,13 @@ class Api::SlackController < ApplicationController
 
   private
   def handle_rootly_command
+    team_id = params[:team_id]
     subcommand, *args = params[:text].to_s.split(" ")
     case subcommand
     when "declare"
-      handle_declare_command(args.join(" "))
+      handle_declare_command(args.join(" "), team_id)
     when "resolve"
-      handle_resolve_command
+      handle_resolve_command(team_id)
     else
       render json: {
         text: "Unknown subcommand: #{subcommand}. Available commands: `/rootly declare <title>` or `/rootly resolve`"
@@ -35,14 +36,14 @@ class Api::SlackController < ApplicationController
     end
   end
 
-  def handle_declare_command(title)
-    slack_service = ::SlackService.new
+  def handle_declare_command(title, team_id)
+    slack_service = ::SlackService.new(team_id)
     slack_service.open_incident_modal(params[:trigger_id], title)
 
     head :ok
   end
 
-  def handle_resolve_command
+  def handle_resolve_command(team_id)
     channel_id = params[:channel_id]
     incident = Incident.find_by(slack_channel_id: channel_id)
 
@@ -54,7 +55,7 @@ class Api::SlackController < ApplicationController
     end
 
     if incident.active?
-      slack_service = ::SlackService.new
+      slack_service = ::SlackService.new(team_id)
       slack_service.resolve_incident(incident, channel_id)
 
       render json: {
@@ -75,6 +76,7 @@ class Api::SlackController < ApplicationController
 
     user_id = payload["user"]["id"]
     creator_name = payload["user"]["username"]
+    team_id = payload["team"]["id"]
 
     incident = Incident.create!(
       title: title,
@@ -82,9 +84,10 @@ class Api::SlackController < ApplicationController
       severity: severity,
       creator_id: user_id,
       creator_name: creator_name,
-      status: "active"
+      status: "active",
+      team_id: team_id
     )
-    ::SlackService.new.create_new_channel(incident)
+    ::SlackService.new(team_id).create_new_channel(incident)
     render json: {}
   end
 end

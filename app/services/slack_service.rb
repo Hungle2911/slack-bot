@@ -1,7 +1,8 @@
 class SlackService
   attr_reader :client
-  def initialize
-    @client = Slack::Web::Client.new(token: ENV["SLACK_API_TOKEN"])
+  def initialize(team_id)
+    team = Team.find_by(team_id: team_id)
+    @client = Slack::Web::Client.new(token: team&.access_token || ENV["SLACK_BOT_TOKEN"])
   end
 
   def open_incident_modal(trigger_id, title = nil)
@@ -109,6 +110,7 @@ class SlackService
 
     response = client.conversations_create(name: channel_name)
     channel_id = response["channel"]["id"]
+    incident_url = "https://#{ENV["APP_HOST_URL"]}/incidents/#{incident.id}"
     incident.update(slack_channel_id: channel_id)
     client.conversations_invite(channel: channel_id, users:  incident.creator_id)
     client.chat_postMessage(
@@ -136,6 +138,10 @@ class SlackService
             {
               type: "mrkdwn",
               text: "*Created by:*\n#{incident.creator_name}"
+            },
+            {
+              type: "mrkdwn",
+              text: "*View Incident Details:*\n#{incident_url}"
             }
           ]
         }
