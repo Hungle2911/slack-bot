@@ -15,6 +15,8 @@ class Api::SlackController < ApplicationController
     case payload["type"]
     when "view_submission"
       handle_modal_submission(payload)
+    when "block_actions"
+      handle_block_actions(payload)
     else
       render json: { text: "Unknown Interaction Type" }
     end
@@ -45,11 +47,25 @@ class Api::SlackController < ApplicationController
 
   def handle_resolve_command(team_id)
     channel_id = params[:channel_id]
+    resolve_incident(team_id, channel_id)
+  end
+
+  def handle_block_actions(payload)
+    action_value = payload["actions"][0]["value"]
+    channel_id = payload["channel"]["id"]
+    team_id = payload["team"]["id"]
+    case action_value
+    when "resolve_this_incident"
+      resolve_incident(team_id, channel_id)
+    end
+  end
+
+  def resolve_incident(team_id, channel_id)
     incident = Incident.find_by(slack_channel_id: channel_id)
 
     if incident.nil?
       render json: {
-        text: "This command can only be used in an incident channel."
+        text: "This can only be used in an incident channel."
       }
       return
     end

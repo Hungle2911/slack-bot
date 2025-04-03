@@ -144,7 +144,30 @@ class SlackService
               text: "*View Incident Details:*\n#{incident_url}"
             }
           ]
+        },
+        {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "emoji": true,
+            "text": "✅ Resolve"
+          },
+          "value": "resolve_this_incident"
+        },
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "emoji": true,
+            "text": "Reject"
+          },
+          "value": "click_me_123"
         }
+      ]
+    }
       ]
     )
 
