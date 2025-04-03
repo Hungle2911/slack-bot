@@ -110,6 +110,7 @@ class SlackService
 
     response = client.conversations_create(name: channel_name)
     channel_id = response["channel"]["id"]
+    incident_url = "https://#{ENV["APP_HOST_URL"]}/incidents/#{incident.id}"
     incident.update(slack_channel_id: channel_id)
     client.conversations_invite(channel: channel_id, users:  incident.creator_id)
     client.chat_postMessage(
@@ -137,6 +138,10 @@ class SlackService
             {
               type: "mrkdwn",
               text: "*Created by:*\n#{incident.creator_name}"
+            },
+            {
+              type: "mrkdwn",
+              text: "*View Incident Details:\n*#{incident_url}"
             }
           ]
         }

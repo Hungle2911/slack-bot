@@ -1,4 +1,5 @@
 class IncidentsController < ApplicationController
+  before_action :set_current_team
   def index
     @incidents = Incident.all.order(sort_column + " " + sort_direction)
   end
@@ -8,6 +9,9 @@ class IncidentsController < ApplicationController
   end
 
   private
+
+  def set_current_team
+  end
 
   def sort_column
     %w[title severity status created_at resolved_at creator_name].include?(params[:sort]) ? params[:sort] : "created_at"
