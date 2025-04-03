@@ -141,7 +141,7 @@ class SlackService
             },
             {
               type: "mrkdwn",
-              text: "*View Incident Details:\n*#{incident_url}"
+              text: "*View Incident Details:*\n#{incident_url}"
             }
           ]
         }

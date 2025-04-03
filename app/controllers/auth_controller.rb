@@ -15,8 +15,6 @@ class AuthController < ApplicationController
         redirect_uri: auth_slack_callback_url
       )
 
-
-
       team = Team.find_or_create_by(team_id: response.team.id)
       team.update(
         access_token: response.access_token,
