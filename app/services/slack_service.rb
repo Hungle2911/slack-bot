@@ -106,7 +106,7 @@ class SlackService
 
   def create_new_channel(incident)
     sanitized_title = incident.title.downcase.gsub(/[^a-z0-9]/, "-")[0..20]
-    channel_name = "inc-#{sanitized_title}-#{Time.now.to_i.to_s[-5..-1]}"
+    channel_name = "inc-#{sanitized_title}-#{Time.now.strftime("%d-%m-%Y")}"
 
     response = client.conversations_create(name: channel_name)
     channel_id = response["channel"]["id"]
